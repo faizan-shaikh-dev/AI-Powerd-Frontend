@@ -1,14 +1,7 @@
-import React from 'react'
-import './App.css';
-import CodeEditor from './CodeEditor';
+import CodeEditor from "./CodeEditor";
 
 const App = () => {
+  return <CodeEditor />;
+};
 
-  return (
-    <>
-      <CodeEditor />
-    </>
-  )
-}
-
-export default App
+export default App;
