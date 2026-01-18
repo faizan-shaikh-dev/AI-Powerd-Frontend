@@ -9,18 +9,22 @@ const CodeEditor = () => {
   const [review, setReview] = useState("");
   const [loading, setLoading] = useState(false);
 
-  /* LOAD SAVED DATA */
+  /* LOAD SAVED DATA (RUNS ONCE) */
   useEffect(() => {
-    setCode(localStorage.getItem("revivr_code") || "");
-    setLanguage(localStorage.getItem("revivr_lang") || "javascript");
-    setReview(localStorage.getItem("revivr_review") || "");
+    const savedCode = localStorage.getItem("revivr_code");
+    const savedLang = localStorage.getItem("revivr_lang");
+    const savedReview = localStorage.getItem("revivr_review");
+
+    if (savedCode) setCode(savedCode);
+    if (savedLang) setLanguage(savedLang);
+    if (savedReview) setReview(savedReview);
   }, []);
 
   /* SAVE DATA */
   useEffect(() => {
-    localStorage.setItem("revivr_code", code);
-    localStorage.setItem("revivr_lang", language);
-    localStorage.setItem("revivr_review", review);
+    if (code) localStorage.setItem("revivr_code", code);
+    if (language) localStorage.setItem("revivr_lang", language);
+    if (review) localStorage.setItem("revivr_review", review);
   }, [code, language, review]);
 
   /* REVIEW HANDLER */
@@ -50,16 +54,20 @@ const CodeEditor = () => {
       const data = await res.json();
       setReview(data.review);
     } catch (err) {
-      setReview(`❌ ${err.message}`);
+      setReview(`${err.message}`);
     } finally {
       setLoading(false);
     }
   };
 
+  /* CLEAR HANDLER (SAFE) */
   const handleClear = () => {
     setCode("");
     setReview("");
-    localStorage.clear();
+
+    localStorage.removeItem("revivr_code");
+    localStorage.removeItem("revivr_review");
+    // language intentionally preserved
   };
 
   return (
